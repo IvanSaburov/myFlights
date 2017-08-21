@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="Encoding">
+    <file url="file://$PROJECT_DIR$/src/main/java/com/myflights/config/ApplicationContextConfig.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/main/java/com/myflights/config/SpringWebAppInitializer.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/main/java/com/myflights/controllers/HelloController.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/main/java/com/myflights/entity/RequestEntity.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/main/java/com/myflights/service/TripCalculator.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/main/resources/application.properties" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/src/main/webapp/resources/application.properties" charset="UTF-8" />
+  </component>
+</project>

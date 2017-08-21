@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<head runat="server">
+<title>Helper</title>
+<meta charset="utf-8">
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.1/jquery.min.js"></script>
+<script src="http://code.jquery.com/ui/1.12.0/jquery-ui.js"></script>
+<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"/>
+<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+
+<style>
+   ::-webkit-scrollbar { 
+    display: none; 
+}
+  </style>
+<!-- JS file -->
+<script src="/WEB-INF/front/EasyAuto/jquery.easy-autocomplete.min.js"></script>
+
+<!-- CSS file -->
+<link rel="stylesheet" href="/WEB-INF/front/EasyAuto/easy-autocomplete.min.css">
+
+<!-- Additional CSS Themes file - not required-->
+<link rel="stylesheet" href="/WEB-INF/front/EasyAuto/easy-autocomplete.themes.min.css">
+
+<!-- Isolated Version of Bootstrap, not needed if your site already uses Bootstrap -->
+<link rel="stylesheet" href="https://formden.com/static/cdn/bootstrap-iso.css" />
+
+<!-- Bootstrap Date-Picker Plugin -->
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/js/bootstrap-datepicker.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.4.1/css/bootstrap-datepicker3.css"/>
+<script type="text/javascript" src="/WEB-INF/front/formCreater.js"></script>
+</head>
+
+<body>
+
+<div class="form-inline text-center" name="startForm" role="form" method="post" style="padding-top: 50px">
+  <div class="form-group">
+    <label class="sr-only" for="cityQuantity">Количество городов</label>
+    <input type="text" name="cityQuantity" class="form-control" id="cityQuantity" placeholder="Количество городов">
+  </div>
+  <button id = "btnForm" class="btn btn-primary">Перейти к форме</button>
+</div>
+</br></br>
+<div id="share" class="form-inline text-center">
+<form name="mainForm" id = "mainForm"></form>
+</div>
+
+<script type="text/javascript">
+var response = [{"rank":"9",
+"content":"Alon",
+"UID":"5"
+},
+{"rank":"6",
+"content":"Tala",   
+"UID":"6" }];
+
+// convert string to JSON
+//response = $.parseJSON(response);
+
+$(function() {
+    $.each(response, function(i, item) {
+        var $tr = $('#share').append(
+            $('<td>').text(item.rank),
+            $('<td>').text(item.content),
+            $('<td>').text(item.UID)
+        ); 
+		//$tr.appendTo('#share');
+        console.log($tr.wrap('<p>').html());
+    });
+});
+function myFunction4(){
+ $(":checkbox[name^=startChb]").change(function(){
+  if ($(":checkbox[name^=startChb]:checked").length == 1)                                              
+   $(':checkbox[name^=startChb]:not(:checked)').prop('disabled', true);  
+  else                                                     
+   $(':checkbox[name^=startChb]:not(:checked)').prop('disabled', false); 
+});
+$(":checkbox[name^=endChb]").change(function(){
+  if ($(":checkbox[name^=endChb]:checked").length == 1)                                              
+   $(':checkbox[name^=endChb]:not(:checked)').prop('disabled', true);  
+  else                                                     
+   $(':checkbox[name^=endChb]:not(:checked)').prop('disabled', false); 
+});
+}
+</script>
+<script>
+    function myFunction1(){
+      var date_input=$('input[name="startDt"]'); //our date input has the name "date"
+    var date_input1=$('input[name="endDt"]'); //our date input has the name "date"
+      var container=$('.bootstrap-iso form').length>0 ? $('.bootstrap-iso form').parent() : "body";
+	  
+		var nowDate = new Date();
+		var today = new Date(nowDate.getFullYear(), nowDate.getMonth(), nowDate.getDate(), 0, 0, 0, 0);
+	  
+      var options={
+        format: 'yyyy-mm-dd',
+        container: container,
+        todayHighlight: true,
+        autoclose: true,
+		startDate: today,
+    orientation: 'top left'
+      };
+      date_input.datepicker(options);
+    date_input1.datepicker(options);
+    myFunction2();
+    }
+</script>
+<script>
+function myFunction3(){
+  $( "#mainForm" ).submit(function(item) {
+  var data = $('#mainForm').serializeArray().reduce(function(obj, item) {
+    obj[item.name] = item.value;
+    return obj;
+}, {});
+alert(data);
+  var id = 'item';
+  });
+}
+</script>
+
+<script type="text/javascript">
+function myFunction2(){
+  var options = {
+
+  url: "resources/cities.json",
+
+  getValue: function(element) {
+    var ob = element.name_translations;
+    var at = ob.ru+' ['+element.code+'] ('+element.name+', '+element.country_code+')';
+        return at;
+     
+
+    },
+
+  list: { 
+    match: {
+      enabled: true
+    }
+  },
+
+ 
+};
+
+$('[id^=cityName]').easyAutocomplete(options);
+}
+
+</script>
+</body>
+</html>

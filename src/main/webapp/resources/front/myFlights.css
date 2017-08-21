@@ -1,0 +1,25 @@
+::-webkit-scrollbar {
+    display: none;
+}
+
+input[readonly] {
+    background-color: #FFF !important;
+    /* any other styles */
+}
+.has-error{
+    color: red;
+    border: 2px solid #f00;
+}
+.errorTxt{
+    border: 1px solid red;
+    min-height: 20px;
+}
+.valid {
+    border: 2px solid #0ff;
+}
+/*input[aria-invalid='false'] {*/
+    /*border: 2px solid green !important;*/
+/*}*/
+input[aria-invalid='true'] {
+    border: 1px solid red !important;
+}
