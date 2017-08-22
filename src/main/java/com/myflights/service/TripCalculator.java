@@ -54,6 +54,7 @@ public class TripCalculator {
 //                while(calendar.getTime().before(endDt)){
 
 //                calendar.add(Calendar.DAY_OF_YEAR, -totalNightsQuantity);
+//                calendar.add(Calendar.DAY_OF_YEAR, -totalNightsQuantity);
                 validateList.add(seg.getCityCode());
                test = getMinPrice(flights, calendar, cityCodeMap, validateList);
 
