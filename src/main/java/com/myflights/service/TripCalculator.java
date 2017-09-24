@@ -52,6 +52,7 @@ public class TripCalculator {
             System.out.println("Общее количество ночей больше выбранного периода");
             return null;
         }
+
         calendar.setTime(startDt);
         System.out.println("=============================================================");
         HashMap<String, Object> test = new HashMap<>();
