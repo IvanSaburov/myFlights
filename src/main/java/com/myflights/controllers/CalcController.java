@@ -6,16 +6,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
+import javax.ws.rs.core.Response;
 import java.util.Map;
 
 @Configuration
 @Controller
-public class HelloController {
+public class CalcController {
   @Autowired
   PriceService priceService;
 
@@ -31,10 +29,13 @@ public class HelloController {
     return "hello";
   }
 
-  @RequestMapping(value = "/post", method = RequestMethod.POST, consumes = "application/json; charset=UTF-8")
+  @RequestMapping(value = "/calc", method = RequestMethod.POST, consumes = "application/json; charset=UTF-8",
+          produces = "application/json; charset=UTF-8")
+  @ResponseBody
   public String printCome(@RequestBody RequestEntity req) {
-    priceService.getResponse(req);
-    return "hello";
+    String res = priceService.getResponse(req);
+    String json = "{\"test\" : \""+res+"\"}";
+    return json;
   }
 
 

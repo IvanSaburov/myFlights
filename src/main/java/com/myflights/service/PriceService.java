@@ -14,6 +14,5 @@ public class PriceService {
   public String getResponse(RequestEntity req){
     Trip trip = SegmentFromJSONConverter.convert(req.getParams());
     return tripCalculator.calcTrip(trip);
-//    return apiClient.getPrices(trip);
   }
 }
