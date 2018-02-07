@@ -10,7 +10,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 
 @Data
-public class ResponseEntity {
+public class DestinationsEntity {
 
 //  public Long getId (){return 0l;}
   private Boolean success;
@@ -20,7 +20,7 @@ public class ResponseEntity {
   private String error;
   private String currency;
 
-  public ResponseEntity() {
+  public DestinationsEntity() {
   }
 
   public List<HashMap<String, Object>> getData() {

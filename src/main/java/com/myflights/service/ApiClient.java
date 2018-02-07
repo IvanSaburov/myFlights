@@ -1,19 +1,13 @@
 package com.myflights.service;
 
-import com.google.common.collect.ImmutableMap;
-import com.myflights.entity.Entiy;
-import com.myflights.entity.ResponseEntity;
-import com.myflights.entity.Trip;
-import lombok.NonNull;
+import com.myflights.entity.DestinationsEntity;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
-import org.springframework.ui.Model;
 import org.springframework.web.client.RestTemplate;
 
-import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.List;
 
@@ -53,13 +47,13 @@ public List<HashMap<String, Object>> getMonthPrices(String origin, String destin
 //  String origin = trip.getSegments().get(0).getCityCode();
 //  String destination = trip.getSegments().get(1).getCityCode();
 //  String month = (new SimpleDateFormat(("yyyy-MM-dd"))).format(trip.getStartDate());
-  org.springframework.http.ResponseEntity<ResponseEntity> test = null;
+  ResponseEntity<DestinationsEntity> test = null;
   try {
-    test = restTemplate.getForEntity(urlMonth, ResponseEntity.class,month,origin, destination);
+    test = restTemplate.getForEntity(urlMonth, DestinationsEntity.class,month,origin, destination);
   }catch(Throwable t){
     t.printStackTrace();
   }
-  ResponseEntity res = test.getBody();
+  DestinationsEntity res = test.getBody();
 
 //    return "response";
   return res.getData();

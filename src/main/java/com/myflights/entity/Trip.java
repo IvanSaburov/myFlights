@@ -1,24 +1,22 @@
 package com.myflights.entity;
 
 
-import lombok.Data;
-
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 
 public class Trip {
-  private List<Segment> segments = new ArrayList<Segment>();
+  private List<City> cities = new ArrayList<City>();
   private Date startDate;
   private Date endDate;
 
-  public List<Segment> getSegments() {
-    return segments;
+  public List<City> getCities() {
+    return cities;
   }
 
-  public void setSegments(List<Segment> segments) {
-    this.segments = segments;
+  public void setCities(List<City> cities) {
+    this.cities = cities;
   }
 
   public Date getStartDate() {

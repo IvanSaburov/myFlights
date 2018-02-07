@@ -11,7 +11,7 @@ public class PriceService {
   @Autowired
   TripCalculator tripCalculator;
 
-  public String getResponse(RequestEntity req){
+  public String findCheapestRoute(RequestEntity req){
     Trip trip = SegmentFromJSONConverter.convert(req.getParams());
     return tripCalculator.calcTrip(trip);
   }

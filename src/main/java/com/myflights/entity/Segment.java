@@ -1,52 +1,46 @@
 package com.myflights.entity;
 
 
+import java.util.Date;
+
 public class Segment {
+  City sourceCity;
+  City destinationCity;
+  Date flightDate;
+  Double flightPrice;
 
-  private String cityName;
-  private String cityCode;
-  private Integer nightsQuantity;
-  private boolean isFirstCity;
-  private boolean isLastCity;
-
-  public String getCityName() {
-    return cityName;
+  public Segment() {
   }
 
-  public void setCityName(String cityName) {
-    this.cityName = cityName;
+  public City getSourceCity() {
+    return sourceCity;
   }
 
-  public Integer getNightsQuantity() {
-    return nightsQuantity;
+  public void setSourceCity(City sourceCity) {
+    this.sourceCity = sourceCity;
   }
 
-  public void setNightsQuantity(Integer nightsQuantity) {
-    this.nightsQuantity = nightsQuantity;
+  public City getDestinationCity() {
+    return destinationCity;
   }
 
-  public boolean isFirstCity() {
-    return isFirstCity;
+  public void setDestinationCity(City destinationCity) {
+    this.destinationCity = destinationCity;
   }
 
-  public void setIsFirstCity(Boolean isFirstCity) {
-      this.isFirstCity = isFirstCity;
+  public Date getFlightDate() {
+    return flightDate;
   }
 
-  public String getCityCode() {
-    return cityCode;
+  public void setFlightDate(Date flightDate) {
+    this.flightDate = flightDate;
   }
 
-  public void setCityCode(String cityCode) {
-    this.cityCode = cityCode;
+  public Double getFlightPrice() {
+    return flightPrice;
   }
 
-  public boolean isLastCity() {
-    return isLastCity;
-  }
-
-  public void setIsLastCity(Boolean isLastCity) {
-      this.isLastCity = isLastCity;
-
+  public void setFlightPrice(Double flightPrice) {
+    this.flightPrice = flightPrice;
   }
 }

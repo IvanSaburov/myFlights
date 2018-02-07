@@ -8,7 +8,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 
-import javax.ws.rs.core.Response;
 import java.util.Map;
 
 @Configuration
@@ -33,7 +32,7 @@ public class CalcController {
           produces = "application/json; charset=UTF-8")
   @ResponseBody
   public String printCome(@RequestBody RequestEntity req) {
-    String res = priceService.getResponse(req);
+    String res = priceService.findCheapestRoute(req);
     String json = "{\"test\" : \""+res+"\"}";
     return json;
   }

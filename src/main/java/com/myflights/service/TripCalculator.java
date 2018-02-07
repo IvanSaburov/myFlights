@@ -1,11 +1,10 @@
 package com.myflights.service;
 
 
-import com.myflights.entity.Segment;
+import com.myflights.entity.City;
 import com.myflights.entity.Trip;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -15,22 +14,22 @@ public class TripCalculator {
 
     public String calcTrip(Trip trip) {
 
-        int segmentsQuantity = trip.getSegments().size();
+        int segmentsQuantity = trip.getCities().size();
         int totalNightsQuantity = 0;
         Date startDt = trip.getStartDate();
         Date endDt = trip.getEndDate();
         Calendar calendar = Calendar.getInstance();
         HashMap<String, List<HashMap<String, Object>>> result = new HashMap<>();
-        HashMap<String, Segment> cityCodeMap = new HashMap<>();
+        HashMap<String, City> cityCodeMap = new HashMap<>();
         for (int i = 0; i < segmentsQuantity; i++) {
-            Segment segment = trip.getSegments().get(i);
+            City segment = trip.getCities().get(i);
             cityCodeMap.put(segment.getCityCode(), segment);
             totalNightsQuantity += segment.getNightsQuantity();
             for (int j = 0; j < segmentsQuantity; j++) {
                 if (j == i) {
                     continue;
                 }
-                Segment destination = trip.getSegments().get(j);
+                City destination = trip.getCities().get(j);
                 List<HashMap<String, Object>> t = result.get(segment.getCityName());
                 //добавить сравнения месяцев начала и конца периода
                 if (t != null) {
@@ -70,7 +69,7 @@ public class TripCalculator {
             System.out.println((new SimpleDateFormat("dd.MM.yyyy")).format(calendar1.getTime()));
 
             minPrice =  Double.MAX_VALUE;
-            for (Segment seg : trip.getSegments()) {
+            for (City seg : trip.getCities()) {
                 StringBuilder sb = new StringBuilder("Итого: ").append("<br \\/>");
                 Double price = 0.0;
                 int nights = totalNightsQuantity;
@@ -127,7 +126,7 @@ public class TripCalculator {
         return sbRes.toString();
     }
 
-    private HashMap<String, Object> getMinPrice(List<HashMap<String, Object>> flights, Calendar calendar, HashMap<String, Segment> cityCodeMap,
+    private HashMap<String, Object> getMinPrice(List<HashMap<String, Object>> flights, Calendar calendar, HashMap<String, City> cityCodeMap,
                                                 List<String> validateList) {
         Double min = Double.MAX_VALUE;
         HashMap<String, Object> result = new HashMap<>();

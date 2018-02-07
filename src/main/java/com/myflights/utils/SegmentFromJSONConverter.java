@@ -1,7 +1,7 @@
 package com.myflights.utils;
 
 
-import com.myflights.entity.Segment;
+import com.myflights.entity.City;
 import com.myflights.entity.Trip;
 
 import java.text.ParseException;
@@ -20,13 +20,13 @@ public class SegmentFromJSONConverter {
             }
         }
         for (int i = 1; i <= segmentQuantity; i++) {
-            Segment segment = new Segment();
-            segment.setCityName((String) input.get("cityName" + i));
-            segment.setCityCode(segment.getCityName().substring(segment.getCityName().indexOf("[") + 1, segment.getCityName().indexOf("]")));
-            segment.setNightsQuantity(Integer.valueOf((String) input.get("nightsQuantity" + i)));
-            segment.setIsFirstCity(getBooleanChbValue((String) input.get("startChb" + i)));
-            segment.setIsLastCity(getBooleanChbValue((String) input.get("endChb" + i)));
-            trip.getSegments().add(segment);
+            City city = new City();
+            city.setCityName((String) input.get("cityName" + i));
+            city.setCityCode(city.getCityName().substring(city.getCityName().indexOf("[") + 1, city.getCityName().indexOf("]")));
+            city.setNightsQuantity(Integer.valueOf((String) input.get("nightsQuantity" + i)));
+            city.setIsFirstCity(getBooleanChbValue((String) input.get("startChb" + i)));
+            city.setIsLastCity(getBooleanChbValue((String) input.get("endChb" + i)));
+            trip.getCities().add(city);
         }
         trip.setStartDate(getDateFromString((String) input.get("startDt")));
         trip.setEndDate(getDateFromString((String) input.get("endDt")));
