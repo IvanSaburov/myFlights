@@ -9,17 +9,17 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 
-public class SegmentFromJSONConverter {
+public class CitiesFromJSONConverter {
 
     public static Trip convert(HashMap<String, Object> input) {
         Trip trip = new Trip();
-        int segmentQuantity = 0;
+        int citiesQuantity = 0;
         for (String key : input.keySet()) {
             if (key.contains("cityName")) {
-                segmentQuantity++;
+                citiesQuantity++;
             }
         }
-        for (int i = 1; i <= segmentQuantity; i++) {
+        for (int i = 1; i <= citiesQuantity; i++) {
             City city = new City();
             city.setCityName((String) input.get("cityName" + i));
             city.setCityCode(city.getCityName().substring(city.getCityName().indexOf("[") + 1, city.getCityName().indexOf("]")));
