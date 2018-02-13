@@ -16,14 +16,17 @@ public class TripCalculator {
   @Autowired
   Permutation permutation;
 
+  private List<City> citiesList;
+
   public String calcTrip(Trip trip) {
 
     int citiesQuantity = trip.getCities().size();
+    citiesList = trip.getCities();
     int totalNightsQuantity = 0;
     Date startDt = trip.getStartDate();
     Date endDt = trip.getEndDate();
     Calendar calendar = Calendar.getInstance();
-    HashMap<String, List<HashMap<String, Object>>> result = new HashMap<>();
+    HashMap<String, Map<String, List<Destination>>> cityDestinationWithPrice = new HashMap<>();
     HashMap<String, City> cityCodeMap = new HashMap<>();
     List<String> cities = new ArrayList<>();
     boolean hasFirstCity = false;
@@ -42,7 +45,7 @@ public class TripCalculator {
       }
       cities.add(segment.getCityCode());
     }
-    if(hasFirstCity && hasLastCity && (firstCity.equals(lastCity))){
+    if (hasFirstCity && hasLastCity && (firstCity.equals(lastCity))) {
       cities.add(lastCity);
     }
 
@@ -57,38 +60,46 @@ public class TripCalculator {
     } else {
       routes = permutation.getPermutationsList();
     }
-    for (int i = 0; i < citiesQuantity; i++) {
-      City segment = trip.getCities().get(i);
-      cityCodeMap.put(segment.getCityCode(), segment);
-      totalNightsQuantity += segment.getNightsQuantity();
-      for (int j = 0; j < citiesQuantity; j++) {
-        if (j == i) {
-          continue;
-        }
-        City destination = trip.getCities().get(j);
-//                List<Destination> t = result.get(segment.getCityName());
-        List<Destination> t = new ArrayList<>();
-        //добавить сравнения месяцев начала и конца периода
-        if (t != null) {
-          t.addAll(apiClient.getMonthPrices(segment.getCityCode(),
-              destination.getCityCode(), (new SimpleDateFormat("yyyy-MM-dd")).format(startDt)));
-          t.addAll(apiClient.getMonthPrices(segment.getCityCode(),
-              destination.getCityCode(), (new SimpleDateFormat("yyyy-MM-dd")).format(endDt)));
-        } else {
-          t = apiClient.getMonthPrices(segment.getCityCode(),
-              destination.getCityCode(), (new SimpleDateFormat("yyyy-MM-dd")).format(startDt));
-          t.addAll(apiClient.getMonthPrices(segment.getCityCode(),
-              destination.getCityCode(), (new SimpleDateFormat("yyyy-MM-dd")).format(endDt)));
-        }
-//                result.put(segment.getCityName(), t);
 
-      }
-    }
     if (!isPeriodValid(calendar, totalNightsQuantity, endDt)) {
       System.out.println("Общее количество ночей больше выбранного периода");
       return null;
     }
 
+    for (int i = 0; i < citiesQuantity; i++) {
+      City city = trip.getCities().get(i);
+      cityCodeMap.put(city.getCityCode(), city);
+      totalNightsQuantity += city.getNightsQuantity();
+      Map<String, List<Destination>> destinationMap = new HashMap<>();
+      for (int j = 0; j < citiesQuantity; j++) {
+        if (j == i) {
+          continue;
+        }
+        City destination = trip.getCities().get(j);
+        List<Destination> t = new ArrayList<>();
+        //добавить сравнения месяцев начала и конца периода
+        t = apiClient.getMonthPrices(city.getCityCode(),
+            destination.getCityCode(), (new SimpleDateFormat("yyyy-MM-dd")).format(startDt));
+        if (endDt.getMonth() > startDt.getMonth()) {
+          t.addAll(apiClient.getMonthPrices(city.getCityCode(),
+              destination.getCityCode(), (new SimpleDateFormat("yyyy-MM-dd")).format(endDt)));
+        }
+        destinationMap.put(destination.getCityCode(), t);
+      }
+      cityDestinationWithPrice.put(city.getCityCode(), destinationMap);
+    }
+
+    for (List<String> route : routes) {
+      for (int i = 0; i < route.size(); i++) {
+        cityDestinationWithPrice.get(route.get(i));
+        City te = getCityByCode(route.get(i));
+        if (i + 1 < route.size()) {
+          System.out.println("Стоимость билета из " + getCityByCode(route.get(i)).getCityName() + " в город " +
+              getCityByCode(route.get(i + 1)).getCityName() + "23 rub");
+        }
+        getRoutePrice();
+      }
+    }
     calendar.setTime(startDt);
     System.out.println("=============================================================");
     HashMap<String, Object> test = new HashMap<>();
@@ -102,65 +113,72 @@ public class TripCalculator {
     Double minPrice;
     String wr = "";
     StringBuilder sbRes = new StringBuilder();
-    while (calendar1.getTime().getTime() <= calendar2.getTime().getTime()) {
-      System.out.println((new SimpleDateFormat("dd.MM.yyyy")).format(calendar1.getTime()));
-
-      minPrice = Double.MAX_VALUE;
-      for (City seg : trip.getCities()) {
-        StringBuilder sb = new StringBuilder("Итого: ").append("<br \\/>");
-        Double price = 0.0;
-        int nights = totalNightsQuantity;
-        int count = 0;
-        validateList.clear();
-        List<HashMap<String, Object>> flights = result.get(seg.getCityName());
-
-        calendar.setTime(calendar1.getTime());
-        calendar.add(Calendar.DAY_OF_YEAR, seg.getNightsQuantity());
-
-        validateList.add(seg.getCityCode());
-        test = getMinPrice(flights, calendar, cityCodeMap, validateList);
-        nights -= seg.getNightsQuantity();
-
-        sb.append("Из " + seg.getCityName() + "в " + test).append("<br \\/>");
-        count++;
-
-        String cit = (String) test.get("city");
-        validateList.add((String) test.get("code"));
-        price += (Double) test.get("price");
-        if (!isPeriodValid(calendar, nights, endDt)) {
-          break;
-        }
-        calendar.add(Calendar.DAY_OF_YEAR, cityCodeMap.get((String) test.get("code")).getNightsQuantity());
-        nights -= cityCodeMap.get((String) test.get("code")).getNightsQuantity();
-        while (count < citiesQuantity - 1) {
-          if (!isPeriodValid(calendar, nights, endDt)) {
-            break;
-          }
-          HashMap<String, Object> iter = getMinPrice(result.get(cit), calendar, cityCodeMap, validateList);
-          if (iter.get("city") == null) {
-            break;
-          }
-          sb.append("Из " + cit + "в " + iter).append("<br \\/>");
-
-          nights -= cityCodeMap.get(iter.get("code")).getNightsQuantity();
-          cit = (String) iter.get("city");
-          validateList.add((String) iter.get("code"));
-          price += (Double) iter.get("price");
-          calendar.add(Calendar.DAY_OF_YEAR, cityCodeMap.get(iter.get("code")).getNightsQuantity());
-          count++;
-        }
-        if (price < minPrice) {
-          minPrice = price;
-          sb.append("Общая сумма: " + price).append("<br \\/>=============================================================<br \\/>");
-          wr = sb.toString();
-          sbRes.append(wr).append("<br \\/>");
-        }
-      }
-
-      calendar1.add(Calendar.DAY_OF_YEAR, 1);
-      System.out.println(wr.toString());
-    }
+//    while (calendar1.getTime().getTime() <= calendar2.getTime().getTime()) {
+//      System.out.println((new SimpleDateFormat("dd.MM.yyyy")).format(calendar1.getTime()));
+//
+//      minPrice = Double.MAX_VALUE;
+//      for (City seg : trip.getCities()) {
+//        StringBuilder sb = new StringBuilder("Итого: ").append("<br \\/>");
+//        Double price = 0.0;
+//        int nights = totalNightsQuantity;
+//        int count = 0;
+//        validateList.clear();
+//        List<HashMap<String, Object>> flights = result.get(seg.getCityName());
+//
+//        calendar.setTime(calendar1.getTime());
+//        calendar.add(Calendar.DAY_OF_YEAR, seg.getNightsQuantity());
+//
+//        validateList.add(seg.getCityCode());
+//        test = getMinPrice(flights, calendar, cityCodeMap, validateList);
+//        nights -= seg.getNightsQuantity();
+//
+//        sb.append("Из " + seg.getCityName() + "в " + test).append("<br \\/>");
+//        count++;
+//
+//        String cit = (String) test.get("city");
+//        validateList.add((String) test.get("code"));
+//        price += (Double) test.get("price");
+//        if (!isPeriodValid(calendar, nights, endDt)) {
+//          break;
+//        }
+//        calendar.add(Calendar.DAY_OF_YEAR, cityCodeMap.get((String) test.get("code")).getNightsQuantity());
+//        nights -= cityCodeMap.get((String) test.get("code")).getNightsQuantity();
+//        while (count < citiesQuantity - 1) {
+//          if (!isPeriodValid(calendar, nights, endDt)) {
+//            break;
+//          }
+//          HashMap<String, Object> iter = getMinPrice(result.get(cit), calendar, cityCodeMap, validateList);
+//          if (iter.get("city") == null) {
+//            break;
+//          }
+//          sb.append("Из " + cit + "в " + iter).append("<br \\/>");
+//
+//          nights -= cityCodeMap.get(iter.get("code")).getNightsQuantity();
+//          cit = (String) iter.get("city");
+//          validateList.add((String) iter.get("code"));
+//          price += (Double) iter.get("price");
+//          calendar.add(Calendar.DAY_OF_YEAR, cityCodeMap.get(iter.get("code")).getNightsQuantity());
+//          count++;
+//        }
+//        if (price < minPrice) {
+//          minPrice = price;
+//          sb.append("Общая сумма: " + price).append("<br \\/>=============================================================<br \\/>");
+//          wr = sb.toString();
+//          sbRes.append(wr).append("<br \\/>");
+//        }
+//      }
+//
+//      calendar1.add(Calendar.DAY_OF_YEAR, 1);
+//      System.out.println(wr.toString());
+//    }
     return sbRes.toString();
+  }
+
+  private City getCityByCode(String code) {
+    City result = citiesList.stream()
+        .filter(city -> (city.getCityCode()).equals(code))
+        .findFirst().get();
+    return result;
   }
 
   private HashMap<String, Object> getMinPrice(List<HashMap<String, Object>> flights, Calendar calendar, HashMap<String, City> cityCodeMap,
@@ -206,6 +224,10 @@ public class TripCalculator {
     }
     calendar.add(Calendar.DAY_OF_YEAR, -totalNightsQuantity);
     return false;
+  }
+
+  private void getRoutePrice() {
+
   }
 
 }

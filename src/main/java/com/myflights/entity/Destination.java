@@ -7,18 +7,20 @@ import java.util.Date;
 
 public class Destination {
   private Boolean show_to_affiliates;
-      private Integer trip_class;
-      private String origin;
-      private String destination;
-      @JsonFormat
+  private Integer trip_class;
+  private String origin;
+  private String destination;
+  @JsonFormat
       (shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
-      private Date depart_date;
-      private String return_date;
-      private Integer number_of_changes;
-      private Double value;
-      private String found_at;
-      private Double distance;
-      private Boolean actual;
+  private Date depart_date;
+  private String return_date;
+  private String gate;
+  private Double duration;
+  private Integer number_of_changes;
+  private Long value;
+  private String found_at;
+  private Double distance;
+  private Boolean actual;
 
   public Destination() {
   }
@@ -71,12 +73,12 @@ public class Destination {
     this.number_of_changes = number_of_changes;
   }
 
-  public Double getValue() {
+  public Long getValue() {
     return value;
   }
 
-  public void setValue(Double value) {
-    this.value = value;
+  public void setValue(Long value) {
+    this.value = value * 100;
   }
 
   public String getFound_at() {
@@ -109,5 +111,21 @@ public class Destination {
 
   public void setShow_to_affiliates(Boolean show_to_affiliates) {
     this.show_to_affiliates = show_to_affiliates;
+  }
+
+  public String getGate() {
+    return gate;
+  }
+
+  public void setGate(String gate) {
+    this.gate = gate;
+  }
+
+  public Double getDuration() {
+    return duration;
+  }
+
+  public void setDuration(Double duration) {
+    this.duration = duration;
   }
 }

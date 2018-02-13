@@ -1,9 +1,12 @@
 package com.myflights.utils;
 
+import org.springframework.stereotype.Component;
+
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.LongStream;
 
+@Component
 public class Permutation {
   private List<String> citiesCodeForPermutations;
 
